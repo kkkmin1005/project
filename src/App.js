@@ -1,21 +1,17 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import './App.css'
+import data from './data.js';
+
 function App() {
-
   const [NewPosts, SetNewPosts] = useState([]);
-  const [RecommendPosts, SetRecommendPosts] = useState([]);
-
-  fetch('url',{method : 'GET'})
-  .then(res => res.json())
-  .then(data => {recievedData = data})
 
   useEffect(() => {
     // data.js에서 데이터 가져와서 상태 업데이트
-    SetNewPosts(recievedData);
-    SetRecommendPosts(recievedData);
+    fetch('url')
+      .then(res => res.json)
+      .then(data => {SetNewPosts(data)})
   }, []); // 컴포넌트가 처음 렌더링될 때 한 번만 실행됨
 
   return (
@@ -25,15 +21,9 @@ function App() {
       </div>
 
       <div className="box">
-        {NewPosts.map((post, index) => <Posts key={index} post={post} />)}
-      </div>
-
-      <div className='Posts'>
-        <p>추천기업</p>
-      </div>
-
-      <div className="box">
-        {RecommendPosts.map((post, index) => <Posts key={index} post={post} />)}
+        {NewPosts.map((post, index) =>
+          <Posts key={index} post={post} />
+        )}
       </div>
     </>
   );
@@ -44,14 +34,16 @@ function Posts({ post }) {
     <Card style={{ width: '18rem' }} className='Card'>
       <Card.Img variant="top" src="holder.js/100px180" />
       <Card.Body>
-        <Card.Title>{post.title}</Card.Title>
+        <Card.Title>{post.new_company1_name}</Card.Title>
         <Card.Text>
-          {post.shortExplain}
+          {post.new_company1_data}
         </Card.Text>
-          <Button variant="primary">자세히 보기</Button>
+        <Button variant="primary">자세히 보기</Button>
       </Card.Body>
     </Card>
   );
 }
 
 export default App;
+
+
