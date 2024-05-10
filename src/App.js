@@ -19,27 +19,35 @@ function LoginPage({setLoginState, setLogurlState}){
 
     const handleSubmitChange = (e) => {
       e.preventDefault();
-
+    
       fetch('https://api.google.com/user', {
-        method: 'post',
+        method: 'POST', // POST 요청 설정
+        headers: {
+          'Content-Type': 'application/json' // JSON 형식으로 데이터 전송
+        },
         body: JSON.stringify({
-            email: id,
-            password: password
+          "email": id,
+          "password": password
         })
       })
       .then(res => res.json())
       .then(res => {
-        if (res.success) {
-            alert("로그인 성공");
-            localStorage.setItem('cookie', id);
-            localStorage.setItem('url', '/user');
-            setLoginState(id); // 로그인 상태 변경
-            setLogurlState('/user');
-        } else{
+        if (res.result === 'success') {
+          alert("로그인 성공");
+          localStorage.setItem('cookie', id);
+          localStorage.setItem('url', '/user');
+          setLoginState(id); // 로그인 상태 변경
+          setLogurlState('/user');
+        } else {
           alert('로그인 실패')
         }
       })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('로그인 실패: 서버에 연결할 수 없음');
+      });
     };
+    
 
     return (
     <div className='loginbox'>
