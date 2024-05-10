@@ -1,80 +1,39 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Button from 'react-bootstrap/Button';
-import React, { useState } from 'react';
-import Form from 'react-bootstrap/Form';
-import './App.css'
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import React, { useEffect, useState } from 'react';
+import LoginPage from './loginpage';
 
 
-function LoginPage({setLoginState, setLogurlState}){
-    const [id, setId] = useState('');
-    const [password, setPassword] = useState('');
 
-    const handleIdChange = (e) => {
-      setId(e.target.value);
-    };
+function App() {
+  const [loginState, setLoginState] = useState('Login'); 
+  const [logurlState, setLogurlState]= useState('/login');
 
-    const handlePasswordChange = (e) => {
-      setPassword(e.target.value);
-    };
-
-    const handleSubmitChange = (e) => {
-      e.preventDefault();
-
-      let data = {
-        email:id, password:password
-      }
-    
-      fetch('https://api.google.com/user', {
-        method: 'POST', // POST 요청 설정
-        headers: {
-          'Content-Type': 'application/json' // JSON 형식으로 데이터 전송
-        },
-        body: JSON.stringify(data)
-      })
-      .then(res => res.json())
-      .then(res => {
-        if (res.result === 'success') {
-          alert("로그인 성공");
-          localStorage.setItem('cookie', id);
-          localStorage.setItem('url', '/user');
-          setLoginState(id); // 로그인 상태 변경
-          setLogurlState('/user');
-        } else {
-          alert('로그인 실패')
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        alert('로그인 실패: 서버에 연결할 수 없음');
-      });
-    };
-    
-
-    return (
-    <div className='loginbox'>
-      <Form className='login'>
-
-        <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Email address</Form.Label>
-          <Form.Control type="email" placeholder="Enter email" onChange={handleIdChange}/>
-          <Form.Text className="text-muted">
-            We'll never share your email with anyone else.
-          </Form.Text>
-          <p>Entered email: {id}</p>
-        </Form.Group>
+  return (
+    <div className="App">
   
-        <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
-          <Form.Control type="password" placeholder="Password" onChange={handlePasswordChange}/>
-          <p>Entered password: {password}</p>
-        </Form.Group>
+      <Navbar bg="light" data-bs-theme="light">
+        <Container>
+          <Navbar.Brand href="/home">SAMSAMOO</Navbar.Brand>
+          <Nav className="me-auto">
+            <Nav.Link href="/home">Home</Nav.Link>
+            <Nav.Link href="/funding">Funding</Nav.Link>
+            <Nav.Link href="/about">About</Nav.Link>
+          </Nav>
+          <Nav>
+            <Nav.Link href={logurlState}>{loginState}</Nav.Link>
+          </Nav>
+        </Container>
+      </Navbar>
 
-        <Button variant="primary" type="submit" onClick={handleSubmitChange}>
-          Submit
-        </Button>
-      </Form>
+    <Routes>
+        <Route path='/login' element={<LoginPage setLoginState={setLoginState} setLogurlState={setLogurlState}/>} />
+    </Routes>  
+
     </div>
-    );
-  }
+  );
+}
 
-  export default LoginPage
+export default App;
