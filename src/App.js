@@ -19,16 +19,17 @@ function LoginPage({setLoginState, setLogurlState}){
 
     const handleSubmitChange = (e) => {
       e.preventDefault();
+
+      let data = {
+        email:id, password:password
+      }
     
       fetch('https://api.google.com/user', {
         method: 'POST', // POST 요청 설정
         headers: {
           'Content-Type': 'application/json' // JSON 형식으로 데이터 전송
         },
-        body: JSON.stringify({
-          "email": id,
-          "password": password
-        })
+        body: JSON.stringify(data)
       })
       .then(res => res.json())
       .then(res => {
