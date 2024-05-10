@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './mainpage.css';
+import './App.css';
 import Card from 'react-bootstrap/Card';
 
 function Posts({ post }) {
@@ -48,8 +48,6 @@ function Mainpage() {
       MainRecommendPosts.push(RecommendPosts[index]);
     }
   });
-
-
 
 
   return (
