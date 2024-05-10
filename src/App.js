@@ -1,74 +1,71 @@
-import React, { useState, useEffect } from 'react';
-import './App.css';
-import Card from 'react-bootstrap/Card';
-
-function Posts({ post }) {
-  return (
-    <Card style={{ width: '18rem' }} className='Card'>
-      <Card.Img variant="top" src="holder.js/100px180" />
-      <Card.Body>
-        <Card.Title>{post.name}</Card.Title>
-        <Card.Text>
-          {post.data}
-        </Card.Text>
-      </Card.Body>
-    </Card>
-  );
-}
-
-function Mainpage() {
-  // NewPosts와 RecommendPosts를 useState 내부에서 초기화
-  const [NewPosts, SetNewPosts] = useState([]);
-  const [RecommendPosts, SetRecommendPosts] = useState([]);
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Button from 'react-bootstrap/Button';
+import React, { useState } from 'react';
+import Form from 'react-bootstrap/Form';
+import './App.css'
 
 
-  useEffect(() => {
-    // data.js에서 데이터 가져와서 상태 업데이트
-    fetch('url')
-      .then(res => res.json()) // .json() 메서드 호출
-      .then(data => {
-        SetNewPosts(data); // 첫 번째 then 메서드에서 처리
-        SetRecommendPosts(data); // 첫 번째 then 메서드에서 처리
-      });
-  }, []); // 컴포넌트가 처음 렌더링될 때 한 번만 실행됨
+function LoginPage({setLoginState, setLogurlState}){
+    const [id, setId] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleIdChange = (e) => {
+      setId(e.target.value);
+    };
+
+    const handlePasswordChange = (e) => {
+      setPassword(e.target.value);
+    };
+
+    const handleSubmitChange = (e) => {
+      e.preventDefault();
+
+      fetch('https://api.google.com/user', {
+        method: 'post',
+        body: JSON.stringify({
+            email: id,
+            password: password
+        })
+      })
+      .then(res => res.json())
+      .then(res => {
+        if (res.success) {
+            alert("로그인 성공");
+            localStorage.setItem('cookie', id);
+            localStorage.setItem('url', '/user');
+            setLoginState(id); // 로그인 상태 변경
+            setLogurlState('/user');
+        } else{
+          alert('로그인 실패')
+        }
+      })
+    };
+
+    return (
+    <div className='loginbox'>
+      <Form className='login'>
+
+        <Form.Group className="mb-3" controlId="formBasicEmail">
+          <Form.Label>Email address</Form.Label>
+          <Form.Control type="email" placeholder="Enter email" onChange={handleIdChange}/>
+          <Form.Text className="text-muted">
+            We'll never share your email with anyone else.
+          </Form.Text>
+          <p>Entered email: {id}</p>
+        </Form.Group>
   
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label>Password</Form.Label>
+          <Form.Control type="password" placeholder="Password" onChange={handlePasswordChange}/>
+          <p>Entered password: {password}</p>
+        </Form.Group>
 
+        <Button variant="primary" type="submit" onClick={handleSubmitChange}>
+          Submit
+        </Button>
+      </Form>
+    </div>
+    );
+  }
 
-  let MainNewPosts = [];
-  let MainRecommendPosts = [];
-
-  [0, 1, 2, 3].forEach(index => {
-    if (NewPosts[index]) {
-      MainNewPosts.push(NewPosts[index]);
-    }
-  });
-
-  [7, 6, 5, 4].forEach(index => {
-    if (RecommendPosts[index]) {
-      MainRecommendPosts.push(RecommendPosts[index]);
-    }
-  });
-
-
-  return (
-    <>
-      <div className='Posts'>
-        <p>신규기업</p>
-      </div>
-
-      <div className="box">
-        {MainNewPosts.map((post, index) => <Posts key={index} post={post} />)}
-      </div>
-
-      <div className='Posts'>
-        <p>추천기업</p>
-      </div>
-
-      <div className="box">
-        {MainRecommendPosts.map((post, index) => <Posts key={index} post={post} />)}
-      </div>
-    </>
-  );
-}
-
-export default Mainpage;
+  export default LoginPage
